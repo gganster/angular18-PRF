@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import type { TimeOut } from '../../types';
 import { Format4digitsPipe } from '../../pipes/format4digits.pipe';
+import { ButtonComponent } from '../../components/button/button.component';
 
 @Component({
   selector: 'app-chrono',
   standalone: true,
-  imports: [CommonModule, Format4digitsPipe],
+  imports: [CommonModule, Format4digitsPipe, ButtonComponent],
   template: `
     <div class="container flex flex-col justify-center items-center gap-6">
       <div class="flex items-end">
@@ -22,18 +23,16 @@ import { Format4digitsPipe } from '../../pipes/format4digits.pipe';
       </h2>
       
       <div class="flex gap-3">
-        <button 
-          class="border px-6 py-1 rounded text-xl font-bold hover:bg-slate-700 shadow shadow-slate-400"
-          (click)="pause()"
-        >
-          ⏸️
-        </button>
-        <button 
-          class="border px-6 py-1 rounded text-xl font-bold hover:bg-slate-700 shadow shadow-slate-400"
-          (click)="start()"
-        >
-          ▶️
-        </button>
+        @if(intervalId !== null) {
+          <ui-button (click)="pause()">
+            ⏸️
+          </ui-button>
+        } @else {
+          <ui-button (click)="start()">
+            ▶️
+          </ui-button>
+        }
+
         <button 
           class="border px-6 py-1 rounded text-xl font-bold hover:bg-slate-700 shadow shadow-slate-400"
           (click)="reset()"
