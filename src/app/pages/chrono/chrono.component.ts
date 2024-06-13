@@ -9,10 +9,18 @@ import { Format4digitsPipe } from '../../pipes/format4digits.pipe';
   imports: [CommonModule, Format4digitsPipe],
   template: `
     <div class="container flex flex-col justify-center items-center gap-6">
-      <h2 class="text-6xl font-bold select-none">{{ counter | format4digits }}</h2>
+      <div class="flex items-end">
+        <h2 class="text-6xl font-bold select-none">{{ counter | format4digits }}</h2>
+        @if(intervalId !== null) {
+          <span 
+            class="w-2 h-2 bg-red-600 rounded-full mb-1.5 ml-1">
+          </span>
+        }
+      </div>
       <h2 class="text-2xl font-semibold select-none text-center">
         {{ currentTime | date: "HH:mm:ss"}}
       </h2>
+      
       <div class="flex gap-3">
         <button 
           class="border px-6 py-1 rounded text-xl font-bold hover:bg-slate-700 shadow shadow-slate-400"
