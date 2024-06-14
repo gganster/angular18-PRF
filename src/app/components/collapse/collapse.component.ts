@@ -40,6 +40,5 @@ import { CommonModule } from "@angular/common";
 export class CollapseComponent {
   @Input() title: string = "";
   @Input() isOpen: boolean = false;
-
   @Output() collapseToggle = new EventEmitter<boolean>();
 }
