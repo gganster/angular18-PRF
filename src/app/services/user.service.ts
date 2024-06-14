@@ -21,7 +21,7 @@ export class UserService {
                 this.users.next(r);
              })
   }
-
+  
   addUser(user: Omit<User, "id">) {
     this.http.post<User>("http://localhost:3000/users", user)
              .subscribe((r) => {
@@ -29,17 +29,17 @@ export class UserService {
              })
   }
 
-  removeUser(id: number) {
-    const newUsers = this.users.getValue();
-
-    this.users.next(newUsers.filter(user => user.id !== id));
-    this.saveLocalStorage();
+  removeUser(id: string) {
+    this.http.delete<User>(`http://localhost:3000/users/${id}`)
+             .subscribe(() => {
+               this.users.next(this.users.getValue().filter(user => user.id !== id));
+             })
   }
 
-  private saveLocalStorage() {
-    const stringData = JSON.stringify(this.users.getValue());
-    localStorage.setItem("users", stringData);
-    console.log(stringData);;
+  putUser(user: User) {
+    this.http.put<User>(`http://localhost:3000/users/${user.id}`, user)
+             .subscribe((r) => {
+               this.users.next(this.users.getValue().map(user => user.id === r.id ? r : user));
+             })
   }
-
 }

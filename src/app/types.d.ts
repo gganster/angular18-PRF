@@ -1,7 +1,7 @@
 export type TimeOut = ReturnType<typeof setInterval>;
 
 export type User = {
-  id: number;
+  id: string;
   email: string;
   password: string;
 };

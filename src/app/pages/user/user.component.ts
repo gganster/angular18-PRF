@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import type { User } from '../../types';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../../services/user.service';
-
-import type {User} from '../../types';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-user',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
-    <div>
       <form #userForm="ngForm" (submit)="handleSubmit($event)" class="flex flex-col gap-4">
         <div class="flex flex-col gap-1">
           <label class="text-sm" for="email">Email: </label>
@@ -43,49 +42,37 @@ import type {User} from '../../types';
           >Submit</button>
         </div>
       </form>
-      <div class="flex flex-col gap-2 mt-4">
-        <table>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Password</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (user of users; track user.id) {
-              <tr class="border">
-                <td>{{user.email}}</td>
-                <td>{{user.password}}</td>
-                <td>
-                  <a [routerLink]="'/users/' + user.id">🔎</a>
-                  <button (click)="handleRemove(user.id)">🗑️</button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
   `,
   styles: ``
 })
-export class UsersComponent implements OnInit {
-  users!: User[];
+export class UserComponent implements OnInit{
+  id!: string;
+  user!: User;
 
   email: string = "";
   password: string = "";
-
   error: string = "";
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private Router: Router,
+    private activatedRoute: ActivatedRoute,
+    private userService: UserService
+  ) { }
 
-  ngOnInit() {
-    this.userService.currentUsers.subscribe(users => this.users = users);
+  ngOnInit(): void {
+    this.id = this.activatedRoute.snapshot.paramMap.get('id')!;
+    this.userService.currentUsers.subscribe(users => {
+      const user = users.find(user => user.id === this.id);
+      if (!user) {
+        this.Router.navigate(['/error/404']);
+        return;
+      }
+      this.user = user;
+      this.email = user.email;
+      this.password = user.password;
+    });
   }
-  handleRemove(id: string) {
-    this.userService.removeUser(id);
-  }
+
   handleSubmit(e: SubmitEvent) {
     if (!this.email) {
       this.error = "Email is required";
@@ -96,7 +83,8 @@ export class UsersComponent implements OnInit {
       return;
     }
 
-    this.userService.addUser({
+    this.userService.putUser({
+      id: this.id,
       email: this.email,
       password: this.password
     });
@@ -104,6 +92,7 @@ export class UsersComponent implements OnInit {
     this.email = "";
     this.password = "";
     this.error = "";
-  }
 
+    this.Router.navigate(['/users']);
+  }
 }
