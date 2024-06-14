@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Input} from '@angular/core';
+import {Input, Output, EventEmitter} from '@angular/core';
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -8,7 +8,10 @@ import { CommonModule } from "@angular/common";
   imports: [CommonModule],
   template: `
     <div class="border-b border-slate-400 pb-2 flex flex-col gap-2">
-      <div class="font-semibold flex justify-between items-center cursor-pointer">
+      <div 
+        (click)="collapseToggle.emit(!isOpen)"
+        class="font-semibold flex justify-between items-center cursor-pointer"
+      >
         <span>{{ title }}</span>
         <span>
           <svg
@@ -37,4 +40,6 @@ import { CommonModule } from "@angular/common";
 export class CollapseComponent {
   @Input() title: string = "";
   @Input() isOpen: boolean = false;
+
+  @Output() collapseToggle = new EventEmitter<boolean>();
 }
