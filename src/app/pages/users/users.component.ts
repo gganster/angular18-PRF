@@ -58,7 +58,8 @@ import type {User} from '../../types';
                 <td>{{user.email}}</td>
                 <td>{{user.password}}</td>
                 <td>
-                  <a [routerLink]="'/users/' + user.id">voir plus</a>
+                  <a [routerLink]="'/users/' + user.id">🔎</a>
+                  <button (click)="handleRemove(user.id)">🗑️</button>
                 </td>
               </tr>
             }
@@ -82,7 +83,9 @@ export class UsersComponent implements OnInit {
   ngOnInit() {
     this.userService.currentUsers.subscribe(users => this.users = users);
   }
-
+  handleRemove(id: number) {
+    this.userService.removeUser(id);
+  }
   handleSubmit(e: SubmitEvent) {
     if (!this.email) {
       this.error = "Email is required";
@@ -102,4 +105,5 @@ export class UsersComponent implements OnInit {
     this.password = "";
     this.error = "";
   }
+
 }

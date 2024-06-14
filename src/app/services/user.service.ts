@@ -6,37 +6,16 @@ import type { User } from '../types';
   providedIn: 'root'
 })
 export class UserService {
-  users = new BehaviorSubject<User[]>([
-    //mocking some Users
-    {
-      id: 1,
-      email: "ooooooooo@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 2,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 3,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 4,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 5,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-  ]);
+  users = new BehaviorSubject<User[]>([]);
   currentUsers = this.users.asObservable();
 
-  constructor() { }
+  constructor() {
+    const stringData = localStorage.getItem("users");
+    if (stringData) {
+      const users = JSON.parse(stringData);
+      this.users.next(users);
+    }
+  }
 
   addUser(user: Omit<User, "id">) {
     const id = Math.ceil(Math.random() * 1000000);
@@ -46,7 +25,20 @@ export class UserService {
       ...this.users.getValue(),
       newUser
     ]);
-
-    console.log(this.users);
+    this.saveLocalStorage();
   }
+
+  removeUser(id: number) {
+    const newUsers = this.users.getValue();
+
+    this.users.next(newUsers.filter(user => user.id !== id));
+    this.saveLocalStorage();
+  }
+
+  private saveLocalStorage() {
+    const stringData = JSON.stringify(this.users.getValue());
+    localStorage.setItem("users", stringData);
+    console.log(stringData);;
+  }
+
 }
