@@ -1,12 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'ui-button',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   template: `
     <button 
-      class="border px-6 py-1 rounded text-xl font-bold hover:bg-slate-700 shadow shadow-slate-400"
+      class="border px-6 py-1 rounded text-xl font-bold shadow shadow-slate-400 hover:bg-slate-700"
+      [ngClass]="{
+        'bg-slate-800 text-white' : type === 'primary',
+        'bg-slate-600 text-white' : type === 'secondary',
+        'bg-red-800 text-white'   : type === 'danger',
+        'bg-yellow-800 text-white': type === 'warning',
+        'bg-green-800 text-white' : type === 'success',
+        'text-sm' : size === 'sm',
+        'text-lg' : size === 'lg',
+        'text-xl' : size === 'xl',
+        'text-2xl': size === '2xl',
+      }"
     >
       <ng-content></ng-content>
     </button>
@@ -14,5 +26,8 @@ import { Component } from '@angular/core';
   styles: ``
 })
 export class ButtonComponent {
-
+  @Input() type: "primary" | "secondary" | "danger" | "warning" | "success" = "primary";
+  @Input() size: "sm" | "md" | "lg" | "xl" | "2xl" = "md";
+  @Input() class: string | undefined;
+  @Input() disabled: boolean = false;
 }

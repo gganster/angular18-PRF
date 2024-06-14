@@ -24,21 +24,21 @@ import { ButtonComponent } from '../../components/button/button.component';
       
       <div class="flex gap-3">
         @if(intervalId !== null) {
-          <ui-button (click)="pause()">
+          <ui-button (click)="pause()" type="danger">
             ⏸️
           </ui-button>
         } @else {
-          <ui-button (click)="start()">
+          <ui-button (click)="start()" type="success" size="2xl">
             ▶️
           </ui-button>
         }
 
-        <button 
-          class="border px-6 py-1 rounded text-xl font-bold hover:bg-slate-700 shadow shadow-slate-400"
+        <ui-button
+          size="2xl"
           (click)="reset()"
         >
           🔄
-        </button>
+        </ui-button>
       </div>
     </div>
   `,
