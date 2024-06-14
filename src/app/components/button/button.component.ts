@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -6,7 +6,8 @@ import { NgClass } from '@angular/common';
   standalone: true,
   imports: [NgClass],
   template: `
-    <button 
+    <button
+      (click)="onClick()"
       class="border px-6 py-1 rounded text-xl font-bold shadow shadow-slate-400 hover:bg-slate-700"
       [ngClass]="{
         'bg-slate-800 text-white' : type === 'primary',
@@ -30,4 +31,10 @@ export class ButtonComponent {
   @Input() size: "sm" | "md" | "lg" | "xl" | "2xl" = "md";
   @Input() class: string | undefined;
   @Input() disabled: boolean = false;
+
+  @Output() myClick = new EventEmitter<number>();
+
+  onClick() {
+    this.myClick.emit(42);
+  }
 }

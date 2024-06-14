@@ -12,13 +12,15 @@ import { ButtonComponent } from '../../components/button/button.component';
       <p>Je suis Guilian, développeur depuis presque 10 ans...</p>
     </ui-collapse>
     <div class="mt-4"></div>
-    <ui-button (click)="toggle()">open</ui-button>
+    <ui-button (myClick)="toggle($event)" >open</ui-button>
   `,
   styles: [``]
 })
 export class AboutComponent {
   isOpen = false;
-  toggle() {
+
+  toggle(n: number) {
     this.isOpen = !this.isOpen;
+    console.log(n);
   }
 }
