@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 import type {User} from '../../types';
 
@@ -68,42 +69,21 @@ import type {User} from '../../types';
   `,
   styles: ``
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit {
+  users!: User[];
+
   email: string = "";
   password: string = "";
 
-  users: User[] = [
-    //mocking some Users
-    {
-      id: 1,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 2,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 3,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 4,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-    {
-      id: 5,
-      email: "gregre@gre.com",
-      password: "gregre"
-    },
-  ];
-
   error: string = "";
 
- handleSubmit(e: SubmitEvent) {
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.userService.currentUsers.subscribe(users => this.users = users);
+  }
+
+  handleSubmit(e: SubmitEvent) {
     if (!this.email) {
       this.error = "Email is required";
       return;
@@ -113,17 +93,11 @@ export class UsersComponent {
       return;
     }
 
-    this.users = [
-      ...this.users,
-      {
-        id: Math.ceil(Math.random() * 1000000),
-        email: this.email,
-        password: this.password
-      }
-    ]
-
-    console.log(this.users);
-
+    this.userService.addUser({
+      email: this.email,
+      password: this.password
+    });
+    
     this.email = "";
     this.password = "";
     this.error = "";
