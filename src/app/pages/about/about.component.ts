@@ -1,23 +1,24 @@
 import { Component } from '@angular/core';
+import { CollapseComponent } from '../../components/collapse/collapse.component';
+import { ButtonComponent } from '../../components/button/button.component';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [],
+  imports: [CollapseComponent, ButtonComponent],
   template: `
-    <h1>About creator</h1>
-    <p>
-      This is a simple Angular application created by me
-    </p>
-    <p>
-      I am a student at the University of Arizona studying computer science
-    </p>
-    <p>
-      I enjoy learning new things, especially about technology and programming
-    </p>
+    <h1 class="text-center mb-4">About creator</h1>
+    <ui-collapse title="Qui suis-je ?" [isOpen]="isOpen">
+      <p>Je suis Guilian, développeur depuis presque 10 ans...</p>
+    </ui-collapse>
+    <div class="mt-4"></div>
+    <ui-button (click)="toggle()">open</ui-button>
   `,
   styles: [``]
 })
 export class AboutComponent {
-
+  isOpen = false;
+  toggle() {
+    this.isOpen = !this.isOpen;
+  }
 }
