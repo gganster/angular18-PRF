@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
+import {HttpClient} from "@angular/common/http";
 import type { User } from '../types';
 
 @Injectable({
@@ -9,23 +10,23 @@ export class UserService {
   users = new BehaviorSubject<User[]>([]);
   currentUsers = this.users.asObservable();
 
-  constructor() {
-    const stringData = localStorage.getItem("users");
-    if (stringData) {
-      const users = JSON.parse(stringData);
-      this.users.next(users);
-    }
+  constructor(
+    private http: HttpClient
+  ) {
+    this.http.get<User[]>("http://localhost:3000/users")
+             .pipe()
+             .toPromise()
+             .then((r) => {
+                if (!r) return;
+                this.users.next(r);
+             })
   }
 
   addUser(user: Omit<User, "id">) {
-    const id = Math.ceil(Math.random() * 1000000);
-    const newUser: User = { id, ...user };
-
-    this.users.next([
-      ...this.users.getValue(),
-      newUser
-    ]);
-    this.saveLocalStorage();
+    this.http.post<User>("http://localhost:3000/users", user)
+             .subscribe((r) => {
+               this.users.next([...this.users.getValue(), r]);
+             })
   }
 
   removeUser(id: number) {
